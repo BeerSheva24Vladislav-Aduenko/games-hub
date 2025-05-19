@@ -16,7 +16,7 @@ const GameGrid: React.FC = () => {
   }, []);
   return (
     <>
-      {responseError && <Text>{responseError}</Text>}
+      {responseError && <Text color="red" textAlign="center" textStyle="6xl">{responseError}</Text>}
       <Grid templateColumns="repeat(5, 1fr)" gap="6" maxW="1440px" mx="auto" mb="10">
         {gameList.map((game: Game) => (
           <GameCard key={game.id} game={game} />
