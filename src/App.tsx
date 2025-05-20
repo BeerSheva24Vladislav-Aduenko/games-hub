@@ -1,20 +1,28 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, Stack } from "@chakra-ui/react";
 import Nav from "./components/Nav";
 import GameGrid from "./components/GameGrid";
+import GanreList from "./components/GenreList";
 
 function App() {
   return (
     <Grid
-      templateAreas={{ base: `'nav' 'main'`, md: `'nav nav' 'main '` }}
-      gap={6}
+      templateAreas={{
+        base: `'nav' 'main'`,
+        md: `'nav nav' 'aside main'`,
+      }}
     >
-      <GridItem area="nav" bg="gold">
-        <Nav />
+      <GridItem area="nav">
+        <Nav></Nav>
       </GridItem>
-      {/* <GridItem area="aside" bg="coral">
-        adide
-      </GridItem> */}
-      <GridItem area="main">
+      <Stack hideBelow={"md"}>
+        <GridItem area="aside" paddingX={5}>
+          <GanreList
+            onSelectGenre={(genreName: string) => console.log(genreName)}
+          />
+        </GridItem>
+      </Stack>
+
+      <GridItem area="main" paddingX="5">
         <GameGrid />
       </GridItem>
     </Grid>

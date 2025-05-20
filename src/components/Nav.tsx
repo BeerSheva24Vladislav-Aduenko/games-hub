@@ -1,14 +1,15 @@
-import { HStack, Image } from "@chakra-ui/react";
-import logo from "../assets/22222222.jpg";
-import { ColorModeButton } from "./ui/color-mode";
+import { HStack, Image } from '@chakra-ui/react'
+import logo from '../assets/22222222.jpg'
+
+import { ColorModeButton } from './ui/color-mode'
 
 const Nav = () => {
   return (
-    <HStack>
-      <Image src={logo} boxSize={"30px"} alt="logo" />
-      <ColorModeButton />
+    <HStack justifyContent={"space-between"}>
+        <Image src={logo} boxSize={"30px"} ></Image>
+        <ColorModeButton></ColorModeButton>
     </HStack>
-  );
-};
+  )
+}
 
-export default Nav;
+export default Nav

@@ -1,27 +1,34 @@
+import { Card, Image, Text, Badge, HStack } from "@chakra-ui/react";
 import React from "react";
-import type { Game } from "../utils/types";
-import { Card, Text, Image } from "@chakra-ui/react";
-interface IGameCard {
+import type { Game } from "../utils/fetch-game-types";
+interface Props {
   game: Game;
 }
-
-const GameCard: React.FC<IGameCard> = ({ game }) => {
+function getColors(metacritic: number): { color: string; bg: string } {
+  return metacritic > 90
+    ? { color: "white", bg: "green" }
+    : { color: "black", bg: "lightgray" };
+}
+const GameCard: React.FC<Props> = ({ game }) => {
   return (
-    <Card.Root maxW="sm" overflow="hidden" cursor={"pointer"}>
+    <Card.Root maxW="sm" overflow="hidden">
       <Image
         src={game.background_image}
-        alt={game.name}
-        fit="cover"
-        w="100%"
-        height={"200px"}
+        alt={`image of game ${game.name}`}
+        objectFit={"cover"}
+        height="100%"
       />
-      <Card.Body gap="2">
+      <Card.Body>
         <Card.Title>{game.name}</Card.Title>
-        <Card.Description>{game.released}</Card.Description>
-        <Text textStyle="2xl" fontWeight="medium" letterSpacing="tight" mt="auto">
-          {game.rating}
-        </Text>
       </Card.Body>
+      <Card.Footer>
+        <HStack justifyContent={"space-between"} width="100%">
+          <Text>
+            {game.parent_platforms.map((p) => p.platform.name).join("; ")}
+          </Text>
+          <Badge {...getColors(game.metacritic)}>{game.metacritic}</Badge>
+        </HStack>
+      </Card.Footer>
     </Card.Root>
   );
 };
