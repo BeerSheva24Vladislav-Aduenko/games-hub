@@ -1,20 +1,12 @@
-import { AxiosError } from "axios";
-import { useState, useEffect,  } from "react";
-import api from "../services/apiClient";
-import type { Genre, GenresResponse } from "../utils/fetch-genre-types";
+import type { Genre } from "../utils/fetch-genre-types";
 import { Text, List, HStack, Avatar, Button } from "@chakra-ui/react";
+import useData from "../hooks/useData";
 interface Props {
-  onSelectGenre: (genre: string) => void
+  onSelectGenre: (genre: string) => void;
 }
-const GenreList: React.FC<Props> = ({onSelectGenre}) => {
-  const [genres, setGenres] = useState<Genre[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  useEffect(() => {
-    api
-      .get<GenresResponse>("/genres")
-      .then((res) => setGenres(res.data.results))
-      .catch((error: AxiosError) => setErrorMessage(error.message));
-  }, []);
+const GenreList: React.FC<Props> = ({ onSelectGenre }) => {
+  const { data: genres, errorMessage } = useData<Genre>("/genres");
+
   return (
     <>
       {errorMessage ? (
@@ -28,9 +20,15 @@ const GenreList: React.FC<Props> = ({onSelectGenre}) => {
               <HStack padding={2}>
                 <Avatar.Root shape="rounded" size="lg" me="-1">
                   <Avatar.Fallback name={g.name} />
-                  <Avatar.Image src={g.image_background}/>
+                  <Avatar.Image src={g.image_background} />
                 </Avatar.Root>
-                <Button variant={"outline"} borderWidth="0" onClick={onSelectGenre.bind(undefined, g.name)}>{g.name}</Button>
+                <Button
+                  variant={"outline"}
+                  borderWidth="0"
+                  onClick={onSelectGenre.bind(undefined, g.name)}
+                >
+                  {g.name}
+                </Button>
               </HStack>
             </List.Item>
           ))}
