@@ -2,8 +2,9 @@ import { Text, List, HStack, Avatar, Button, Spinner } from "@chakra-ui/react";
 import useGenre from "../hooks/useGenre";
 interface Props {
   onSelectGenre: (genre: string) => void;
+  selectedGenre: string | null;
 }
-const GenreList: React.FC<Props> = ({ onSelectGenre }) => {
+const GenreList: React.FC<Props> = ({ onSelectGenre, selectedGenre }) => {
   const { data: genres, errorMessage, isLoading } = useGenre();
   return isLoading ? (
     <Spinner />
@@ -25,7 +26,8 @@ const GenreList: React.FC<Props> = ({ onSelectGenre }) => {
                 <Button
                   variant={"outline"}
                   borderWidth="0"
-                  onClick={onSelectGenre.bind(undefined, g.name)}
+                  onClick={onSelectGenre.bind(undefined, g.slug)}
+                  fontWeight={g.slug === selectedGenre ? "bold" : "normal"}
                 >
                   {g.name}
                 </Button>
