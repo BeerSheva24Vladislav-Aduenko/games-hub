@@ -1,21 +1,14 @@
-import { AxiosError } from "axios";
-import { useState, useEffect,  } from "react";
-import api from "../services/apiClient";
-import type { Genre, GenresResponse } from "../utils/fetch-genre-types";
-import { Text, List, HStack, Avatar, Button } from "@chakra-ui/react";
+import { Text, List, HStack, Avatar, Button, Spinner } from "@chakra-ui/react";
+import useGenre from "../hooks/useGenre";
 interface Props {
-  onSelectGenre: (genre: string) => void
+  onSelectGenre: (genre: string) => void;
+  selectedGenre: string | null;
 }
-const GenreList: React.FC<Props> = ({onSelectGenre}) => {
-  const [genres, setGenres] = useState<Genre[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  useEffect(() => {
-    api
-      .get<GenresResponse>("/genres")
-      .then((res) => setGenres(res.data.results))
-      .catch((error: AxiosError) => setErrorMessage(error.message));
-  }, []);
-  return (
+const GenreList: React.FC<Props> = ({ onSelectGenre, selectedGenre }) => {
+  const { data: genres, errorMessage, isLoading } = useGenre();
+  return isLoading ? (
+    <Spinner />
+  ) : (
     <>
       {errorMessage ? (
         <Text color="red" fontSize={"2.5rem"}>
@@ -28,9 +21,16 @@ const GenreList: React.FC<Props> = ({onSelectGenre}) => {
               <HStack padding={2}>
                 <Avatar.Root shape="rounded" size="lg" me="-1">
                   <Avatar.Fallback name={g.name} />
-                  <Avatar.Image src={g.image_background}/>
+                  <Avatar.Image src={g.image_background} />
                 </Avatar.Root>
-                <Button variant={"outline"} borderWidth="0" onClick={onSelectGenre.bind(undefined, g.name)}>{g.name}</Button>
+                <Button
+                  variant={"outline"}
+                  borderWidth="0"
+                  onClick={onSelectGenre.bind(undefined, g.slug)}
+                  fontWeight={g.slug === selectedGenre ? "bold" : "normal"}
+                >
+                  {g.name}
+                </Button>
               </HStack>
             </List.Item>
           ))}

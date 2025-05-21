@@ -1,19 +1,16 @@
-import { useEffect, useState } from "react";
-import api from "../services/apiClient";
-import type { Game, GamesResponse } from "../utils/fetch-game-types";
-import { AxiosError } from "axios";
-import { Text, SimpleGrid } from "@chakra-ui/react";
+import { Text, SimpleGrid, Spinner } from "@chakra-ui/react";
 import GameCard from "./GameCard";
-const GameGrid = () => { 
-  const [games, setGames] = useState<Game[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  useEffect(() => {
-    api
-      .get<GamesResponse>("/games")
-      .then((res) => setGames(res.data.results))
-      .catch((error: AxiosError) => setErrorMessage(error.message));
-  }, []);
-  return (
+import useGame from "../hooks/useGame";
+interface Props {
+  selectedGenre: string | null;
+}
+
+const GameGrid: React.FC<Props> = ({ selectedGenre }) => {
+  const { data: games, errorMessage, isLoading } = useGame(selectedGenre);
+
+  return isLoading ? (
+    <Spinner />
+  ) : (
     <>
       {errorMessage ? (
         <Text color="red" fontSize={"2.5rem"}>
