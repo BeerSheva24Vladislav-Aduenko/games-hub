@@ -1,11 +1,12 @@
-import type { Game } from "../utils/fetch-game-types";
-import { Text, SimpleGrid } from "@chakra-ui/react";
+import { Text, SimpleGrid, Spinner } from "@chakra-ui/react";
 import GameCard from "./GameCard";
-import useData from "../hooks/useData";
+import useGame from "../hooks/useGame";
 const GameGrid = () => {
-  const { data: games, errorMessage } = useData<Game>("/games");
+  const { data: games, errorMessage, isLoading } = useGame();
 
-  return (
+  return isLoading ? (
+    <Spinner />
+  ) : (
     <>
       {errorMessage ? (
         <Text color="red" fontSize={"2.5rem"}>

@@ -1,13 +1,13 @@
-import type { Genre } from "../utils/fetch-genre-types";
-import { Text, List, HStack, Avatar, Button } from "@chakra-ui/react";
-import useData from "../hooks/useData";
+import { Text, List, HStack, Avatar, Button, Spinner } from "@chakra-ui/react";
+import useGenre from "../hooks/useGenre";
 interface Props {
   onSelectGenre: (genre: string) => void;
 }
 const GenreList: React.FC<Props> = ({ onSelectGenre }) => {
-  const { data: genres, errorMessage } = useData<Genre>("/genres");
-
-  return (
+  const { data: genres, errorMessage, isLoading } = useGenre();
+  return isLoading ? (
+    <Spinner />
+  ) : (
     <>
       {errorMessage ? (
         <Text color="red" fontSize={"2.5rem"}>

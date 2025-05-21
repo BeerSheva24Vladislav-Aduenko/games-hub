@@ -6,14 +6,21 @@ interface AllResponse<T> {
   results: T[];
 }
 
-export default function useData<T>(endpoint: string) {
+export default function useFetchData<T>(endpoint: string): {
+  data: T[];
+  errorMessage: string;
+  isLoading: boolean;
+} {
   const [data, setData] = useState<T[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   useEffect(() => {
     api
       .get<AllResponse<T>>(endpoint)
       .then((res) => setData(res.data.results))
-      .catch((error: AxiosError) => setErrorMessage(error.message));
+      .catch((error: AxiosError) => setErrorMessage(error.message))
+      .finally(() => setIsLoading(false));
+    setIsLoading(true);
   }, []);
-  return { data, errorMessage };
+  return { data, errorMessage, isLoading };
 }
