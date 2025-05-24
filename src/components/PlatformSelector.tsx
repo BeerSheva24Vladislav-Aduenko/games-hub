@@ -1,6 +1,6 @@
 import { Menu, Button, Portal, Spinner } from "@chakra-ui/react";
-import { FaChevronDown } from "react-icons/fa";
-import { type FC } from "react";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { useState, type FC } from "react";
 import type ParentPlatform from "../utils/ParentPlatform";
 import usePlatforms from "../hooks/usePlatforms";
 interface Props {
@@ -12,6 +12,7 @@ const PlatformSelector: FC<Props> = ({
   onSelectPlatform,
 }) => {
   const { errorMessage, isLoading, data: platforms } = usePlatforms();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <>
       {isLoading ? (
@@ -19,10 +20,10 @@ const PlatformSelector: FC<Props> = ({
       ) : (
         !errorMessage && (
           <Menu.Root>
-            <Menu.Trigger asChild>
+            <Menu.Trigger asChild onClick={() => setIsOpen(!isOpen)}>
               <Button variant="outline" size="sm" borderWidth={0}>
                 {selectedPlatform?.name || "Platforms"}
-                <FaChevronDown />
+                {isOpen ? <FaChevronUp /> : <FaChevronDown />}
               </Button>
             </Menu.Trigger>
             <Portal>
