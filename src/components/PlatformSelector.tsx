@@ -24,24 +24,32 @@ const PlatformSelector: FC<Props> = ({
         <Spinner></Spinner>
       ) : (
         !errorMessage && (
-          <Menu.Root>
+          <Menu.Root onExitComplete={() => setIsOpen(false)}>
             <Menu.Trigger asChild onClick={() => setIsOpen(!isOpen)}>
               <Button variant="outline" size="sm" borderWidth={0}>
                 {selectedPlatform?.name || "Platforms"}
                 {isOpen ? (
-                  <ComponentMotion duration={0.9} timing={easeInOut} key="down">
-                    <FaChevronDown />
+                  <ComponentMotion
+                    duration={duration}
+                    timing={easeInOut}
+                    key="down"
+                  >
+                    <FaChevronUp />
                   </ComponentMotion>
                 ) : (
-                  <ComponentMotion duration={0.9} timing={easeInOut} key="up">
-                    <FaChevronUp />
+                  <ComponentMotion
+                    duration={duration}
+                    timing={easeInOut}
+                    key="up"
+                  >
+                    <FaChevronDown />
                   </ComponentMotion>
                 )}
               </Button>
             </Menu.Trigger>
             <Portal>
               <Menu.Positioner>
-                <ComponentMotion duration={0.5} timing={easeInOut}>
+                <ComponentMotion duration={duration} timing={easeInOut}>
                   <Menu.Content>
                     {platforms.map((p) => (
                       <Menu.Item
