@@ -1,14 +1,13 @@
-import { Grid, GridItem, Stack, Wrap } from "@chakra-ui/react";
+import { Grid, GridItem, Stack } from "@chakra-ui/react";
 import Nav from "./components/Nav";
 import GameGrid from "./components/GameGrid";
 import GanreList from "./components/GenreList";
 import { useState } from "react";
 import PlatformSelector from "./components/PlatformSelector";
-import { initialFilters, type Filters } from "./utils/filter";
-import DiscardButton from "./components/DiscardButton";
+import type GameQuery from "./utils/gameQuery";
 
 function App() {
-  const [filters, setFilters] = useState<Filters>(initialFilters);
+  const [gameQuery, setGameQuery] = useState<GameQuery>({} as GameQuery);
   return (
     <Grid
       templateAreas={{
@@ -17,36 +16,27 @@ function App() {
       }}
     >
       <GridItem area="nav">
-        <Nav />
+        <Nav searchSubmitter ={(searchText: string) => setGameQuery({...gameQuery, searchText})}/>
       </GridItem>
-
-      <Stack hideBelow="md">
+      <Stack hideBelow={"md"}>
         <GridItem area="aside" paddingX={5}>
           <GanreList
-            selectedGenre={filters.genre}
-            onSelectGenre={(genreName: string) =>
-              setFilters((prev) => ({ ...prev, genre: genreName }))
+            selectedGenre={gameQuery.genreName}
+            onSelectGenre={(genreName: string | null) =>
+              setGameQuery({ ...gameQuery, genreName })
             }
           />
         </GridItem>
       </Stack>
 
       <GridItem area="main" paddingX="5">
-        <Wrap>
-          <PlatformSelector
-            selectedPlatform={filters.platform}
-            onSelectPlatform={(platform) =>
-              setFilters((prev) => ({ ...prev, platform }))
-            }
-          />
-          {(filters.platform || filters.genre) && (
-            <DiscardButton setFilters={setFilters} />
-          )}
-        </Wrap>
-        <GameGrid
-          selectedGenre={filters.genre}
-          selectedPlatform={filters.platform}
-        />
+        <PlatformSelector
+          onSelectPlatform={(platform) =>
+            setGameQuery({ ...gameQuery, platform })
+          }
+          selectedPlatform={gameQuery.platform}
+        ></PlatformSelector>
+        <GameGrid gameQuery={gameQuery} />
       </GridItem>
     </Grid>
   );
