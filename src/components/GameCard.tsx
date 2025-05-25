@@ -1,6 +1,7 @@
 import { Card, Image, Text, Badge, HStack, VStack } from "@chakra-ui/react";
 import React from "react";
 import type { Game } from "../utils/fetch-game-types";
+import No_Image from "../assets/No_Image.jpg";
 import Rater from "./Rater";
 interface Props {
   game: Game;
@@ -14,7 +15,7 @@ const GameCard: React.FC<Props> = ({ game }) => {
   return (
     <Card.Root maxW="sm" overflow="hidden">
       <Image
-        src={game.background_image}
+        src={game.background_image || No_Image}
         alt={`image of game ${game.name}`}
         objectFit={"cover"}
         height="100%"
@@ -28,7 +29,9 @@ const GameCard: React.FC<Props> = ({ game }) => {
             <Text>
               {game.parent_platforms.map((p) => p.platform.name).join("; ")}
             </Text>
-            <Badge {...getColors(game.metacritic)}>{game.metacritic}</Badge>
+            {game.metacritic && (
+              <Badge {...getColors(game.metacritic)}>{game.metacritic}</Badge>
+            )}
           </HStack>
           <Rater rate={game.rating}></Rater>
         </VStack>
