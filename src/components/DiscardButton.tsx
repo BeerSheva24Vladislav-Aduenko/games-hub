@@ -1,19 +1,9 @@
 import { Button } from "@chakra-ui/react";
 import React from "react";
-import { type Filters, initialFilters } from "../utils/filter";
 
-interface Props {
-  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
-}
-
-const DiscardButton: React.FC<Props> = ({ setFilters }) => {
+const DiscardButton: React.FC = () => {
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      borderWidth={0}
-      onClick={() => setFilters(initialFilters)}
-    >
+    <Button variant="outline" size="sm" borderWidth={0}>
       Discard Filters
     </Button>
   );
