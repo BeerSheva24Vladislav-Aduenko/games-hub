@@ -2,14 +2,23 @@ import { Box, Grid, GridItem, Stack, Wrap } from "@chakra-ui/react";
 import Nav from "./components/Nav";
 import GameGrid from "./components/GameGrid";
 import GanreList from "./components/GenreList";
-import { useState } from "react";
 import PlatformSelector from "./components/PlatformSelector";
-import SorterSelector from "./components/SortSelector";
-import type GameQuery from "./utils/gameQuery";
+import SorterSelector, { type SortOption } from "./components/SortSelector";
 import GenreSelector from "./components/GenreSelector";
+import useGameQuery from "./state-managment/store";
+import DiscardButton from "./components/DiscardButton";
 
 function App() {
-  const [gameQuery, setGameQuery] = useState<GameQuery>({} as GameQuery);
+  const {
+    genreName,
+    platform,
+    searchText,
+    ordering,
+    setGenreName,
+    setPlatform,
+    setSearchText,
+    setOrdering,
+  } = useGameQuery();
 
   return (
     <Grid
@@ -20,17 +29,15 @@ function App() {
     >
       <GridItem area="nav">
         <Nav
-          searchSubmitter={(searchText: string) =>
-            setGameQuery({ ...gameQuery, searchText })
-          }
+          searchSubmitter={(searchText: string) => setSearchText(searchText)}
         />
       </GridItem>
       <Stack hideBelow={"md"}>
         <GridItem area="aside" paddingX={5}>
           <GanreList
-            selectedGenre={gameQuery.genreName}
+            selectedGenre={genreName}
             onSelectGenre={(genreName: string | null) =>
-              setGameQuery({ ...gameQuery, genreName })
+              setGenreName(genreName)
             }
           />
         </GridItem>
@@ -39,27 +46,26 @@ function App() {
       <GridItem area="main" paddingX="5">
         <Wrap>
           <PlatformSelector
-            onSelectPlatform={(platform) =>
-              setGameQuery({ ...gameQuery, platform })
-            }
-            selectedPlatform={gameQuery.platform}
+            selectedPlatform={platform}
+            onSelectPlatform={(platform) => setPlatform(platform)}
           />
           <SorterSelector
+            selectedOrdering={ordering}
             onSelectOrdering={(option) =>
-              setGameQuery({ ...gameQuery, ordering: option })
+              setOrdering(option as SortOption | null)
             }
-            selectedOrdering={gameQuery.ordering}
           />
+          <DiscardButton />
           <Box as="div" display={"inline"} hideBelow={"sm"} hideFrom={"md"}>
             <GenreSelector
-              selectedGenre={gameQuery.genreName}
+              selectedGenre={genreName}
               onSelectGenre={(genreName: string | null) =>
-                setGameQuery({ ...gameQuery, genreName })
+                setGenreName(genreName)
               }
             />
           </Box>
         </Wrap>
-        <GameGrid gameQuery={gameQuery} />
+        <GameGrid gameQuery={{ genreName, platform, searchText, ordering }} />
       </GridItem>
     </Grid>
   );
